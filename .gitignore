@@ -1,0 +1,12 @@
+
+Backend/.idea/
+
+Backend/untitled/__pycache__/
+
+Backend/Orchestral/__pycache__/
+
+Backend/Orchestral/migrations/__pycache__/
+
+Backend/venv/
+
+*.sqlite3

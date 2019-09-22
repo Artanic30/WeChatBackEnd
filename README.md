@@ -36,7 +36,7 @@ Registered at `/absence/`
 #### Members Present 
 Supported method:  `GET`
 
-Registered at `` /manager/<str:time>/present/    time in YYYY-MM-DD formate
+Registered at `/manager/<str:time>/present/`   time in YYYY-MM-DD formate
 
 ```json
 {
@@ -66,7 +66,7 @@ Registered at `/manage/`
 [
   {
     "pk": 5,
-    "name": 'David,
+    "name": "David",
     "reason": "reasons",
     "time": "2018-01-22T09:12:43.083Z"
   }
@@ -82,7 +82,7 @@ Registered at `/manage/<int:pk>/`
   {
     "pk": 5,
     "result": "Reason for allowing/not allowing absence",
-    "is_prove": False
+    "is_prove": false
   }
 ```
 

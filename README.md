@@ -12,7 +12,8 @@ Registered at `/absence/`
 ```json
 {
     "reason": "reasons",
-    "time": "2018-01-22T09:12:43.083Z"
+    "time": "2018-01-22T09:12:43.083Z",
+    "name": "David"
 }
 ```
 
@@ -25,7 +26,8 @@ Registered at `/absence/`
 [
   {
     "reason": "reasons",
-    "time": "2018-01-22T09:12:43.083Z"
+    "time": "2018-01-22T09:12:43.083Z",
+    "name": "David"
   }
 ]
 ```

@@ -36,19 +36,22 @@ Registered at `/absence/`
 #### Members Present 
 Supported method:  `GET`
 
-Registered at `` to be determined
+Registered at `` /manager/<str:time>/present/    time in YYYY-MM-DD formate
 
 ```json
-[
-  {
-    "name": "David",
-    "state": "absent"
-  },
-  {
-    "name": "John",
-    "state": "present"
-  }
-]
+{
+  "time": "2018-01-22T09:12:43.083Z",
+  "members":[
+    {
+        "name": "David",
+        "state": "absent"
+    },
+    {
+        "name": "John",
+        "state": "present"
+    }
+  ]
+}
 ```
 
 

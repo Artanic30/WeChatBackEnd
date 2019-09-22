@@ -4,7 +4,8 @@ from . import views
 
 router = SimpleRouter()
 
-# router.register(r'game', views.GameViewSet, base_name='game')
+router.register(r'absence', views.AbsenceViewSet, base_name='absence')
+router.register(r'manager', views.ManagerViewSet, base_name='manager')
 
 
 urlpatterns = router.urls

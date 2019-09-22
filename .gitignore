@@ -10,3 +10,5 @@ Backend/Orchestral/migrations/__pycache__/
 Backend/venv/
 
 *.sqlite3
+
+Backend/__pycache__/

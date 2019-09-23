@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from .models import Absence, Identity
 from .serializers import AbsenceSerializers
 from rest_framework.response import Response

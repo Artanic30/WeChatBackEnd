@@ -36,7 +36,8 @@ Registered at `/absence/`
 #### Members Present 
 Supported method:  `GET`
 
-Registered at `/manager/<str:time>/present/`   time in YYYY-MM-DD formate
+Registered at `/manager/<str:time>/present/`
+time in YYYY-MM-DD formate
 
 ```json
 {
@@ -76,13 +77,14 @@ Registered at `/manage/`
 #### All Absence Information 
 Supported method:  `POST`
 
-Registered at `/manage/<int:pk>/`
+Registered at `/manage/<int:pk>/process/`   
+pk is the pk of absence, transform in form-data instead of application/json
 
 ```json
   {
-    "pk": 5,
     "result": "Reason for allowing/not allowing absence",
-    "is_prove": false
+    "is_prove": false,
+    "approver_name": "David"
   }
 ```
 

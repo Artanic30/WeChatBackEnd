@@ -2,7 +2,7 @@
 
 ## API
 
-###For Members
+### For All Members
 
 #### Abesence Application 
 Supported method:  `POST`
@@ -56,7 +56,7 @@ time in YYYY-MM-DD formate
 ```
 
 
-###For Managers
+### For Managers
 
 #### All Absence Information 
 Supported method:  `GET`

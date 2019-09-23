@@ -33,6 +33,22 @@ class AbsenceViewSet(viewsets.ViewSet):
 class ManagerViewSet(viewsets.ViewSet):
     serializers = AbsenceSerializers
 
+    def list(self, request):
+        # return all unprocessed request
+        total_info = self.serializers(Absence.objects.filter(result='Not processed yet!'), many=True)
+        return Response(total_info.data, status=status.HTTP_200_OK)
+
+    @action(methods=['POST'], detail=True)
+    def process(self, request, pk=None):
+        absence = Absence.objects.get(pk=pk)
+        reason = request.POST.get('reason')
+        approver_name = request.POST.get('approver_name')
+        is_prove = request.POST.get('is_prove')
+        se_absence = self.serializers(absence, data={'reason': reason, 'permission': is_prove,
+                                                     'processor': approver_name}, partial=True)
+        test_valid(se_absence)
+        return Response({'msg': 'Submit approved!'}, status=status.HTTP_200_OK)
+
     @action(methods=['GET'], detail=True)
     def present(self, request, pk=None):
         # return member present in rehearsal
@@ -60,7 +76,7 @@ class ManagerViewSet(viewsets.ViewSet):
 
 
 def test_valid(serializer):
-    if serializer.is_valid():
+    if serializer.is_valid(raise_exception=True):
         serializer.save()
     else:
         Response({'msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)

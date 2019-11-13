@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Absence
+from .models import Absence, Identity
 import django.utils.timezone as timezone
 import datetime
 
@@ -32,3 +32,12 @@ class AbsenceSerializers(serializers.ModelSerializer):
         return absence
 
 
+class IdentitySerializers(serializers.ModelSerializer):
+    current_user = serializers.SlugRelatedField(
+        many=False,
+        slug_field='username'
+    )
+
+    class Meta:
+        model = Identity
+        fields = '__all__'

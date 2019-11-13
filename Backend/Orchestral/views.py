@@ -3,6 +3,8 @@ from .serializers import AbsenceSerializers
 from rest_framework.response import Response
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
+from .service import Service
+from django.contrib.auth import login, logout
 
 
 # Create your views here.
@@ -20,13 +22,26 @@ class AbsenceViewSet(viewsets.ViewSet):
             'applier': applier,
             'time': time
         })
-        test_valid(absence)
+        Service.test_valid(absence)
         return Response({'msg': 'Information submitted!'}, status=status.HTTP_200_OK)
 
     def list(self, request):
         # todo: Apply auth system to restrict the returned info are user related
         total_info = self.serializers(Absence.objects.all(), many=True)
         return Response(total_info.data, status=status.HTTP_200_OK)
+
+    @action(methods=['POST'])
+    def login(self, request):
+        # login user and tie identity with user
+        name = request.POST.get('name')
+        union_id = request.POST.get('wx_union_id')
+        user = Service.get_or_create_user(name)
+        if not user:
+            return Response({'msg': 'You are not in the member list!'}, status=status.HTTP_401_UNAUTHORIZED)
+        if user is not None:
+            login(request, user)
+        if not Service.match_user_identity(name=name, wx_union_id=union_id):
+            logout(request)
 
 
 class ManagerViewSet(viewsets.ViewSet):
@@ -45,7 +60,7 @@ class ManagerViewSet(viewsets.ViewSet):
         is_prove = request.POST.get('is_prove')
         se_absence = self.serializers(absence, data={'reason': reason, 'permission': is_prove,
                                                      'processor': approver_name}, partial=True)
-        test_valid(se_absence)
+        Service.test_valid(se_absence)
         return Response({'msg': 'Submit approved!'}, status=status.HTTP_200_OK)
 
     @action(methods=['GET'], detail=True)
@@ -73,9 +88,3 @@ class ManagerViewSet(viewsets.ViewSet):
                 })
         return Response({'members': result, 'time': pk}, status=status.HTTP_200_OK)
 
-
-def test_valid(serializer):
-    if serializer.is_valid(raise_exception=True):
-        serializer.save()
-    else:
-        Response({'msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)

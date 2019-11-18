@@ -30,7 +30,7 @@ class AbsenceViewSet(viewsets.ViewSet):
         total_info = self.serializers(Absence.objects.all(), many=True)
         return Response(total_info.data, status=status.HTTP_200_OK)
 
-    @action(methods=['POST'])
+    @action(methods=['POST'], detail=False)
     def login(self, request):
         # login user and tie identity with user
         name = request.POST.get('name')

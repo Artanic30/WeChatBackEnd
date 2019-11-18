@@ -15,6 +15,14 @@ Registered at `/absence/login/`
     "union_id": "aljsd8asdabsdb728d1djhasbkdjb"
 }
 ```
+Ever since the first login, one wechat union id will be bound with a name in the 
+member name list.
+If login fail, the backend will retrun 
+```json
+{
+    "msg": "Error information"
+}
+```
 
 #### Abesence Application 
 Supported method:  `POST`

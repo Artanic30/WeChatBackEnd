@@ -2,6 +2,8 @@ from rest_framework import serializers
 from .models import Absence, Identity
 import django.utils.timezone as timezone
 import datetime
+from django.contrib.auth.models import User
+
 
 
 class AbsenceSerializers(serializers.ModelSerializer):
@@ -35,7 +37,8 @@ class AbsenceSerializers(serializers.ModelSerializer):
 class IdentitySerializers(serializers.ModelSerializer):
     current_user = serializers.SlugRelatedField(
         many=False,
-        slug_field='username'
+        slug_field='username',
+        queryset=User.objects.all()
     )
 
     class Meta:

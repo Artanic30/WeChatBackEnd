@@ -17,28 +17,33 @@ class Service:
 
     @classmethod
     def match_user_identity(cls, wx_union_id, name):
+        if name not in NAME_LIST:
+            return False
         # if name and union_id match return True otherwise return False
-        if Identity.objects.filter(name=name).exist():
-            return Identity.objects.filter(name=name, union_id=wx_union_id).exist()
-        else:
-            if name in NAME_LIST:
-                new_identity = IdentitySerializers(data={
-                    'name': name,
-                    'union_id': wx_union_id,
-                    'user': name
-                })
-                cls.test_valid(new_identity)
-                return True
+        user = Identity.objects.filter(name=name)[0]
+        if user:
+            if user.union_id:
+                pass
             else:
-                return False
+                complete_identity = IdentitySerializers(user, data={
+                        'union_id': wx_union_id,
+                    }, partial=True)
+                cls.test_valid(complete_identity)
+        else:
+            new_identity = IdentitySerializers(data={
+                'name': name,
+                'union_id': wx_union_id,
+                'current_user': name
+            })
+            cls.test_valid(new_identity)
+            authenticate(username=name, password='20161103')
+        return True
 
     @classmethod
     def get_or_create_user(cls, name):
-        if User.objects.filter(username=name).exist():
-            return authenticate(username=name, password='20161103')
-        else:
-            if name in NAME_LIST:
-                User.objects.create_user(username=name, password='20161103')
-                return authenticate(username=name, password='20161103')
+        if name and User.objects.get(username=name):
+            return User.objects.get(username=name)
+        elif name in NAME_LIST:
+            user = User.objects.create_user(username=name, password='20161103')
+            return user
         return None
-

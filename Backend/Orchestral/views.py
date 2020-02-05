@@ -1,7 +1,14 @@
 from .models import Absence, Identity
-from .serializers import AbsenceSerializers
+from .serializers import AbsenceSerializers, LoginSerializer, ManagerAbsenceSerializers
 from rest_framework.response import Response
 from rest_framework import viewsets, status
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework.mixins import (
+    ListModelMixin,
+    CreateModelMixin,
+    UpdateModelMixin,
+    DestroyModelMixin,
+    RetrieveModelMixin)
 from rest_framework.decorators import action
 from .service import Service
 from django.contrib.auth import login, logout
@@ -9,59 +16,45 @@ from django.contrib.auth import login, logout
 
 # Create your views here.
 
+class AbsenceViewSet(viewsets.GenericViewSet,
+                     ListModelMixin,
+                     CreateModelMixin,
+                     DestroyModelMixin,
+                     UpdateModelMixin, ):
+    serializer_class = AbsenceSerializers
+    permission_classes = [IsAuthenticated]
 
-class AbsenceViewSet(viewsets.ViewSet):
-    serializers = AbsenceSerializers
-
-    def create(self, request):
-        reason = request.POST.get('reason')
-        time = request.POST.get('time')
-        applier = Identity.objects.get(name=request.POST.get('name'))
-        absence = self.serializers(data={
-            'reason': reason,
-            'applier': applier,
-            'time': time
-        })
-        Service.test_valid(absence)
-        return Response({'msg': 'Information submitted!'}, status=status.HTTP_200_OK)
-
-    def list(self, request):
-        # todo: Apply auth system to restrict the returned info are user related
-        total_info = self.serializers(Absence.objects.all(), many=True)
-        return Response(total_info.data, status=status.HTTP_200_OK)
-
-    @action(methods=['POST'], detail=False)
-    def login(self, request):
-        # login user and tie identity with user
-        name = request.POST.get('name')
-        union_id = request.POST.get('wx_union_id')
-        user = Service.get_or_create_user(name)
-        if not user:
-            return Response({'msg': 'You are not in the member list!'}, status=status.HTTP_401_UNAUTHORIZED)
-        if user is not None:
-            login(request, user)
-        if not Service.match_user_identity(name=name, wx_union_id=union_id):
-            logout(request)
+    def get_queryset(self):
+        identity = Identity.objects.get(current_user=self.request.user)
+        return Absence.objects.filter(applier=identity)
 
 
-class ManagerViewSet(viewsets.ViewSet):
-    serializers = AbsenceSerializers
+class ManagerViewSet(viewsets.GenericViewSet,
+                     ListModelMixin,
+                     CreateModelMixin,
+                     DestroyModelMixin,
+                     UpdateModelMixin, ):
+    serializer_class = ManagerAbsenceSerializers
+    permission_classes = [IsAdminUser, IsAuthenticated]
 
-    def list(self, request):
-        # return all unprocessed request
-        total_info = self.serializers(Absence.objects.filter(result='Not processed yet!'), many=True)
-        return Response(total_info.data, status=status.HTTP_200_OK)
+    def get_queryset(self):
+        return Absence.objects.filter(result='Not processed yet!')
 
-    @action(methods=['POST'], detail=True)
-    def process(self, request, pk=None):
-        absence = Absence.objects.get(pk=pk)
-        reason = request.POST.get('reason')
-        approver_name = request.POST.get('approver_name')
-        is_prove = request.POST.get('is_prove')
-        se_absence = self.serializers(absence, data={'reason': reason, 'permission': is_prove,
-                                                     'processor': approver_name}, partial=True)
-        Service.test_valid(se_absence)
-        return Response({'msg': 'Submit approved!'}, status=status.HTTP_200_OK)
+    def update(self, request, *args, **kwargs):
+        result = request.POST.get('result')
+        permission = request.POST.get('permission')
+        processor = Identity.objects.get(current_user=request.user)
+        if result:
+            pro_absence = Absence.objects.get(id=kwargs['pk'])
+            print(processor)
+            new_absence = self.serializer_class(pro_absence,
+                                                data={'result': result,
+                                                      'permission': permission,
+                                                      'processor': processor.name},
+                                                partial=True)
+            Service.test_valid(new_absence)
+            return Response({'msg': 'submit!'}, status=status.HTTP_200_OK)
+        return Response({'msg': 'Please write down processing result!'}, status=status.HTTP_400_BAD_REQUEST)
 
     @action(methods=['GET'], detail=True)
     def present(self, request, pk=None):
@@ -88,3 +81,20 @@ class ManagerViewSet(viewsets.ViewSet):
                 })
         return Response({'members': result, 'time': pk}, status=status.HTTP_200_OK)
 
+
+class AccountsViewSet(viewsets.ViewSet):
+    serializer_class = LoginSerializer
+
+    @action(methods=['POST'], detail=False)
+    def login(self, request):
+        # login user and tie identity with user
+        name = request.POST.get('name')
+        union_id = request.POST.get('wx_union_id')
+        user = Service.get_or_create_user(name)
+        if not user:
+            return Response({'msg': 'You are not in the member list!'}, status=status.HTTP_401_UNAUTHORIZED)
+        if not Service.match_user_identity(name=name, wx_union_id=union_id):
+            logout(request)
+            return Response({'msg': "Name and wechat doesn't match!"}, status=status.HTTP_403_FORBIDDEN)
+        login(request, user)
+        return Response({'msg': 'Login!'}, status=status.HTTP_200_OK)

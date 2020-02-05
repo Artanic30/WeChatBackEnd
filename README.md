@@ -34,8 +34,29 @@ Registered at `/absence/`
 {
     "reason": "reasons",
     "time": "2018-01-22T09:12:43.083Z",
-    "name": "David"
 }
+```
+
+#### Change Abesence Application 
+Supported method:  `PUT`
+
+Registered at `/absence/<int:absence_id>/`
+
+```json
+{
+    "reason": "reasons",
+    "time": "2018-01-22T09:12:43.083Z",
+}
+```
+
+#### Delete Abesence Application 
+Supported method:  `DELETE`
+
+Registered at `/absence/<int:absence_id>/`
+
+```json
+401 status code
+no return data
 ```
 
 #### Abesence Information

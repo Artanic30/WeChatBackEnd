@@ -82,6 +82,8 @@ Registered at `/absence/`
 
 ### For Managers
 
+any student try access these information will get code 403
+
 #### All Absence Information 
 Supported method:  `GET`
 

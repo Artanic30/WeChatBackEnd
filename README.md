@@ -7,22 +7,23 @@
 #### Login
 Supported method:  `POST`
 
-Registered at `/absence/login/`
+Registered at `/account/login/`
 
 ```json
 {
     "name": "David",
-    "union_id": "aljsd8asdabsdb728d1djhasbkdjb"
+    "wx_union_id": "aljsd8asdabsdb728d1djhasbkdjb"
 }
 ```
 Ever since the first login, one wechat union id will be bound with a name in the 
 member name list.
-If login fail, the backend will retrun 
+If login fail, the backend will retrun
 ```json
 {
     "msg": "Error information"
 }
 ```
+and you may show the message directly to user
 
 #### Abesence Application 
 Supported method:  `POST`
@@ -33,8 +34,29 @@ Registered at `/absence/`
 {
     "reason": "reasons",
     "time": "2018-01-22T09:12:43.083Z",
-    "name": "David"
 }
+```
+
+#### Change Abesence Application 
+Supported method:  `PUT`
+
+Registered at `/absence/<int:absence_id>/`
+
+```json
+{
+    "reason": "reasons",
+    "time": "2018-01-22T09:12:43.083Z",
+}
+```
+
+#### Delete Abesence Application 
+Supported method:  `DELETE`
+
+Registered at `/absence/<int:absence_id>/`
+
+```json
+401 status code
+no return data
 ```
 
 #### Abesence Information
@@ -60,6 +82,8 @@ Registered at `/absence/`
 
 ### For Managers
 
+any student try access these information will get code 403
+
 #### All Absence Information 
 Supported method:  `GET`
 
@@ -81,16 +105,23 @@ Registered at `/manage/`
 ```
 
 #### All Absence Information 
-Supported method:  `POST`
+Supported method:  `PUT`
 
-Registered at `/manage/<int:pk>/process/`   
-pk is the pk of absence, transform in form-data instead of application/json
+Registered at `/manage/<int:absence_id>/`   
+id is the pk of absence
 
 ```json
   {
     "result": "Reason for allowing/not allowing absence",
-    "is_prove": false,
-    "approver_name": "David"
+    "permission": false
+  }
+```
+
+return data
+
+```json
+  {
+    "msg": "xxxxxxxx"
   }
 ```
 
@@ -98,11 +129,11 @@ pk is the pk of absence, transform in form-data instead of application/json
 Supported method:  `GET`
 
 Registered at `/manager/<str:time>/present/`
-time in YYYY-MM-DD formate
+time in YYYY-MM-DD formate example: ('2020-3-12')
 
 ```json
 {
-  "time": "2018-01-22T09:12:43.083Z",
+  "time": "2018-01-22",
   "members":[
     {
         "name": "David",

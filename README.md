@@ -7,22 +7,23 @@
 #### Login
 Supported method:  `POST`
 
-Registered at `/absence/login/`
+Registered at `/account/login/`
 
 ```json
 {
     "name": "David",
-    "union_id": "aljsd8asdabsdb728d1djhasbkdjb"
+    "wx_union_id": "aljsd8asdabsdb728d1djhasbkdjb"
 }
 ```
 Ever since the first login, one wechat union id will be bound with a name in the 
 member name list.
-If login fail, the backend will retrun 
+If login fail, the backend will retrun
 ```json
 {
     "msg": "Error information"
 }
 ```
+and you may show the message directly to user
 
 #### Abesence Application 
 Supported method:  `POST`

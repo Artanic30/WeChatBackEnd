@@ -103,16 +103,23 @@ Registered at `/manage/`
 ```
 
 #### All Absence Information 
-Supported method:  `POST`
+Supported method:  `PUT`
 
-Registered at `/manage/<int:pk>/process/`   
-pk is the pk of absence, transform in form-data instead of application/json
+Registered at `/manage/<int:absence_id>/`   
+id is the pk of absence
 
 ```json
   {
     "result": "Reason for allowing/not allowing absence",
-    "is_prove": false,
-    "approver_name": "David"
+    "permission": false
+  }
+```
+
+return data
+
+```json
+  {
+    "msg": "xxxxxxxx"
   }
 ```
 
@@ -120,11 +127,11 @@ pk is the pk of absence, transform in form-data instead of application/json
 Supported method:  `GET`
 
 Registered at `/manager/<str:time>/present/`
-time in YYYY-MM-DD formate
+time in YYYY-MM-DD formate example: ('2020-3-12')
 
 ```json
 {
-  "time": "2018-01-22T09:12:43.083Z",
+  "time": "2018-01-22",
   "members":[
     {
         "name": "David",

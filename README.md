@@ -12,7 +12,9 @@ Registered at `/account/login/`
 ```json
 {
     "name": "David",
-    "wx_union_id": "aljsd8asdabsdb728d1djhasbkdjb"
+    "app_id": "aljsd8asdabsdb728d1djhasbkdjb",
+    "app_secret": "dasdasdasdabsdb728d1djhasbkdjb",
+    "code": "sdasdasdasda"
 }
 ```
 Ever since the first login, one wechat union id will be bound with a name in the 

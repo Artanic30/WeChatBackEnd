@@ -41,7 +41,7 @@ class Service:
 
     @classmethod
     def get_or_create_user(cls, name):
-        if name and User.objects.get(username=name):
+        if name and len(User.objects.filter(username=name)) != 0:
             return User.objects.get(username=name)
         elif name in NAME_LIST:
             user = User.objects.create_user(username=name, password='20161103')

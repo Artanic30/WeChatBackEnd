@@ -51,7 +51,9 @@ class IdentitySerializers(serializers.ModelSerializer):
 
 class LoginSerializer(serializers.Serializer):
     name = serializers.CharField()
-    wx_union_id = serializers.CharField()
+    app_id = serializers.CharField()
+    app_secret = serializers.CharField()
+    code = serializers.CharField()
 
 
 class ManagerAbsenceSerializers(serializers.ModelSerializer):

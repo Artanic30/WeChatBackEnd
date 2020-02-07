@@ -20,7 +20,9 @@ class Service:
         if name not in NAME_LIST:
             return False
         # if name and union_id match return True otherwise return False
-        user = Identity.objects.filter(name=name)[0]
+        user = None
+        if len(Identity.objects.filter(name=name)) != 0:
+            user = Identity.objects.get(name=name)
         if user:
             if user.union_id:
                 pass

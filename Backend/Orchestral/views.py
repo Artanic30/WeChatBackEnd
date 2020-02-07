@@ -111,6 +111,6 @@ class AccountsViewSet(viewsets.ViewSet):
             logout(request)
             return Response({'msg': "Name and wechat doesn't match!"}, status=status.HTTP_403_FORBIDDEN)
         """
-        authenticate(username=user.username, password='20161103')
+        user = authenticate(username=user.username, password='20161103')
         login(request, user)
         return Response({'msg': 'Login!'}, status=status.HTTP_200_OK)

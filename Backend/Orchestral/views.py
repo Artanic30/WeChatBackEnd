@@ -9,6 +9,7 @@ from rest_framework.mixins import (
     UpdateModelMixin,
     DestroyModelMixin,
     RetrieveModelMixin)
+from django.contrib.auth import authenticate
 from rest_framework.decorators import action
 from .service import Service
 from django.contrib.auth import login, logout
@@ -110,6 +111,6 @@ class AccountsViewSet(viewsets.ViewSet):
             logout(request)
             return Response({'msg': "Name and wechat doesn't match!"}, status=status.HTTP_403_FORBIDDEN)
         """
-        print(user, 'login check')
+        authenticate(username=user.username, password='20161103')
         login(request, user)
         return Response({'msg': 'Login!'}, status=status.HTTP_200_OK)

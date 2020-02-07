@@ -25,7 +25,7 @@ class AbsenceViewSet(viewsets.GenericViewSet,
                      DestroyModelMixin,
                      UpdateModelMixin, ):
     serializer_class = AbsenceSerializers
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         identity = Identity.objects.get(current_user=self.request.user)
@@ -38,7 +38,7 @@ class ManagerViewSet(viewsets.GenericViewSet,
                      DestroyModelMixin,
                      UpdateModelMixin, ):
     serializer_class = ManagerAbsenceSerializers
-    permission_classes = [IsAdminUser, IsAuthenticated]
+    # permission_classes = [IsAdminUser, IsAuthenticated]
 
     def get_queryset(self):
         return Absence.objects.filter(result='Not processed yet!')

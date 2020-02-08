@@ -25,7 +25,6 @@ class AbsenceViewSet(viewsets.GenericViewSet,
                      DestroyModelMixin,
                      UpdateModelMixin):
     serializer_class = AbsenceSerializers
-    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         self.request = Service.fake_login_request(self.request)
@@ -39,7 +38,6 @@ class ManagerViewSet(viewsets.GenericViewSet,
                      DestroyModelMixin,
                      UpdateModelMixin, ):
     serializer_class = ManagerAbsenceSerializers
-    permission_classes = [IsAdminUser, IsAuthenticated]
 
     def get_queryset(self):
         self.request = Service.fake_login_request(self.request)

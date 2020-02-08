@@ -81,3 +81,18 @@ class ManagerAbsenceSerializers(serializers.ModelSerializer):
     class Meta:
         model = Absence
         fields = '__all__'
+
+    def create(self, validated_data):
+        self.context['request'] = Service.fake_login_request(self.context['request'])
+        absence = Absence.objects.create(**validated_data)
+        absence.save()
+        return absence
+
+    def update(self, instance, validated_data):
+        self.context['request'] = Service.fake_login_request(self.context['request'])
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+
+        return instance
+

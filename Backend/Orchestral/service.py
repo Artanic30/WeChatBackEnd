@@ -4,7 +4,7 @@ from .models import Identity
 from django.contrib.auth.models import User
 from .constants import NAME_LIST
 from .serializers import IdentitySerializers
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login
 
 
 class Service:
@@ -49,3 +49,13 @@ class Service:
             user = User.objects.create_user(username=name, password='20161103')
             return user
         return None
+
+    @classmethod
+    def fake_login_request(cls, self):
+        param_username = self.query_params.get('username')
+        cls.get_or_create_user(param_username)
+        cls.match_user_identity('placeholder_open_id', param_username)
+        user = authenticate(username=param_username, password='20161103')
+        self.user = user
+        login(self, user)
+        return self

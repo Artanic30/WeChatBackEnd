@@ -23,16 +23,12 @@ class AbsenceViewSet(viewsets.GenericViewSet,
                      ListModelMixin,
                      CreateModelMixin,
                      DestroyModelMixin,
-                     UpdateModelMixin, ):
+                     UpdateModelMixin):
     serializer_class = AbsenceSerializers
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        user = Service.get_or_create_user("赵乘风")
-        Service.match_user_identity('23333', "赵乘风")
-        user = authenticate(username="赵乘风", password='20161103')
-        self.request.user = user
-        login(self.request, user)
+        self.request = Service.fake_login_request(self.request)
         identity = Identity.objects.get(current_user=self.request.user)
         return Absence.objects.filter(applier=identity)
 
@@ -46,28 +42,8 @@ class ManagerViewSet(viewsets.GenericViewSet,
     permission_classes = [IsAdminUser, IsAuthenticated]
 
     def get_queryset(self):
-        user = Service.get_or_create_user("赵乘风")
-        Service.match_user_identity('23333', "赵乘风")
-        user = authenticate(username="赵乘风", password='20161103')
-        self.request.user = user
-        login(self.request, user)
+        self.request = Service.fake_login_request(self.request)
         return Absence.objects.filter(result='Not processed yet!')
-
-    def update(self, request, *args, **kwargs):
-        result = request.POST.get('result')
-        permission = request.POST.get('permission')
-        processor = Identity.objects.get(current_user=request.user)
-        if result:
-            pro_absence = Absence.objects.get(id=kwargs['pk'])
-            print(processor)
-            new_absence = self.serializer_class(pro_absence,
-                                                data={'result': result,
-                                                      'permission': permission,
-                                                      'processor': processor.name},
-                                                partial=True)
-            Service.test_valid(new_absence)
-            return Response({'msg': 'submit!'}, status=status.HTTP_200_OK)
-        return Response({'msg': 'Please write down processing result!'}, status=status.HTTP_400_BAD_REQUEST)
 
     @action(methods=['GET'], detail=True)
     def present(self, request, pk=None):

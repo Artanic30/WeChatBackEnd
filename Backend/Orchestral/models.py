@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 class Identity(models.Model):
     name = models.CharField(max_length=20, unique=True)
-    union_id = models.CharField(max_length=100, unique=True, null=True, blank=True)
+    union_id = models.CharField(max_length=100, null=True, blank=True)
     current_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='current_user', null=True)
 
 

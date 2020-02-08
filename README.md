@@ -35,7 +35,7 @@ Registered at `/absence/`
 ```json
 {
     "reason": "reasons",
-    "time": "2018-01-22T09:12:43.083Z",
+    "time_absence": "2018-01-22T09:12:43.083Z",
 }
 ```
 
@@ -89,7 +89,7 @@ any student try access these information will get code 403
 #### All Absence Information 
 Supported method:  `GET`
 
-Registered at `/manage/`
+Registered at `/manager/`
 
 ```json
 [
@@ -109,7 +109,7 @@ Registered at `/manage/`
 #### All Absence Information 
 Supported method:  `PUT`
 
-Registered at `/manage/<int:absence_id>/`   
+Registered at `/manager/<int:absence_id>/`   
 id is the pk of absence
 
 ```json

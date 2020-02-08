@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Absence, Identity
 import django.utils.timezone as timezone
 import datetime
+from .service import Service
 from django.contrib.auth.models import User
 
 
@@ -22,6 +23,7 @@ class AbsenceSerializers(serializers.ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data):
+        self.context['request'] = Service.fake_login_request(self.context['request'])
         # check if the request is less than one hour before the rehearsal
         time_absence = validated_data.get('time_absence')
         user = self.context.get('request').user
@@ -35,6 +37,14 @@ class AbsenceSerializers(serializers.ModelSerializer):
         absence = Absence.objects.create(**validated_data)
         absence.save()
         return absence
+
+    def update(self, instance, validated_data):
+        self.context['request'] = Service.fake_login_request(self.context['request'])
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+
+        return instance
 
 
 class IdentitySerializers(serializers.ModelSerializer):

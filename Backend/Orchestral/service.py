@@ -3,7 +3,6 @@ from rest_framework import status
 from .models import Identity
 from django.contrib.auth.models import User
 from .constants import NAME_LIST
-from .serializers import IdentitySerializers
 from django.contrib.auth import authenticate, login
 
 
@@ -17,6 +16,7 @@ class Service:
 
     @classmethod
     def match_user_identity(cls, wx_union_id, name):
+        from .serializers import IdentitySerializers
         if name not in NAME_LIST:
             return False
         # if name and union_id match return True otherwise return False

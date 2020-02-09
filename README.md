@@ -149,3 +149,20 @@ time in YYYY-MM-DD formate example: ('2020-3-12')
 }
 ```
 
+## Depoly(Only the part I remember)
+
+# start virtual environment
+cd /<env:root_dir>
+source bin/activate
+
+# install requirement library
+pip3 install -r requirements.txt
+
+tips: (sudo pip3 install -r requirements.txt) will install teh library to the system's environment instead of env's
+
+# update database
+python3 manage.py makemigrations
+python3 manage.py migrate
+
+# start uwsgi 
+sudo bash update.sh (the script is set up)

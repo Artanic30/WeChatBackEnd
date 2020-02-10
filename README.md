@@ -56,9 +56,10 @@ Registered at `/absence/`
 {
     "reason": "reasons",
     "time_absence": "2018-01-22",
-    "type": "A" or "S" #  A is 全体排练, S is 声部排练
+    "type": "A"
 }
 ```
+type only has two choice : "A" and "S", A is 全体排练, S is 声部排练
 
 #### Change Abesence Application 
 Supported method:  `PUT`
@@ -69,9 +70,10 @@ Registered at `/absence/<int:absence_id>/`
 {
     "reason": "reasons",
     "time_absence": "2018-01-22",
-    "type": "A" or "S" #  A is 全体排练, S is 声部排练
+    "type": "A"
 }
 ```
+type only has two choice : "A" and "S", A is 全体排练, S is 声部排练
 
 #### Delete Abesence Application 
 Supported method:  `DELETE`

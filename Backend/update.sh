@@ -5,6 +5,9 @@ echo "uwsgi closed"
 echo "start to pull latest code from github"
 git pull origin master
 echo "code pulled!"
+echo "update libraries"
+pip3 install -r requirements.txt
+echo "libraries updated"
 echo "refresh database"
 python3 manage.py makemigrations
 python3 manage.py migrate

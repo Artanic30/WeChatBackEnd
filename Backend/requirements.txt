@@ -4,3 +4,5 @@ Pillow==5.4.1
 djangorestframework==3.9.1
 promise==2.2.1
 pytz==2018.9
+djangorestframework-jwt
+PyJWT

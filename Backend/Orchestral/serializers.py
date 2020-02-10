@@ -17,13 +17,19 @@ class AbsenceSerializers(serializers.ModelSerializer):
         read_only=True,
         slug_field='name'
      )
+    result = serializers.CharField(
+        read_only=True
+    )
+    permission = serializers.BooleanField(
+        read_only=True
+    )
 
     class Meta:
         model = Absence
         fields = '__all__'
 
     def create(self, validated_data):
-        self.context['request'] = Service.fake_login_request(self.context['request'])
+        # self.context['request'] = Service.fake_login_request(self.context['request'])
         # check if the request is less than one hour before the rehearsal
         time_absence = validated_data.get('time_absence')
         user = self.context.get('request').user
@@ -39,7 +45,7 @@ class AbsenceSerializers(serializers.ModelSerializer):
         return absence
 
     def update(self, instance, validated_data):
-        self.context['request'] = Service.fake_login_request(self.context['request'])
+        # self.context['request'] = Service.fake_login_request(self.context['request'])
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
@@ -59,40 +65,47 @@ class IdentitySerializers(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class LoginSerializer(serializers.Serializer):
-    name = serializers.CharField()
-    app_id = serializers.CharField()
-    app_secret = serializers.CharField()
-    code = serializers.CharField()
-
-
 class ManagerAbsenceSerializers(serializers.ModelSerializer):
     applier = serializers.SlugRelatedField(
         many=False,
         slug_field='name',
         read_only=True
-     )
+    )
     processor = serializers.SlugRelatedField(
         many=False,
         slug_field='name',
         queryset=Identity.objects.all()
-     )
+    )
+    reason = serializers.CharField(
+        read_only=True
+    )
+    time_absence = serializers.TimeField(
+        read_only=True
+    )
+    type = serializers.CharField(
+        read_only=True
+    )
 
     class Meta:
         model = Absence
         fields = '__all__'
 
     def create(self, validated_data):
-        self.context['request'] = Service.fake_login_request(self.context['request'])
         absence = Absence.objects.create(**validated_data)
         absence.save()
         return absence
-
+    """
     def update(self, instance, validated_data):
-        self.context['request'] = Service.fake_login_request(self.context['request'])
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
 
         return instance
+    """
 
+
+class LoginSerializer(serializers.Serializer):
+    name = serializers.CharField()
+    app_id = serializers.CharField()
+    app_secret = serializers.CharField()
+    code = serializers.CharField()

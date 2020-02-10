@@ -3,6 +3,7 @@ from .serializers import AbsenceSerializers, LoginSerializer, ManagerAbsenceSeri
 from rest_framework.response import Response
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework_jwt.settings import api_settings
 from rest_framework.mixins import (
     ListModelMixin,
     CreateModelMixin,
@@ -25,9 +26,10 @@ class AbsenceViewSet(viewsets.GenericViewSet,
                      DestroyModelMixin,
                      UpdateModelMixin):
     serializer_class = AbsenceSerializers
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        self.request = Service.fake_login_request(self.request)
+        # self.request = Service.fake_login_request(self.request)
         identity = Identity.objects.get(current_user=self.request.user)
         return Absence.objects.filter(applier=identity)
 
@@ -38,9 +40,10 @@ class ManagerViewSet(viewsets.GenericViewSet,
                      DestroyModelMixin,
                      UpdateModelMixin, ):
     serializer_class = ManagerAbsenceSerializers
+    permission_classes = [IsAuthenticated, IsAdminUser]
 
     def get_queryset(self):
-        self.request = Service.fake_login_request(self.request)
+        # self.request = Service.fake_login_request(self.request)
         return Absence.objects.filter(result='Not processed yet!')
 
     @action(methods=['GET'], detail=True)
@@ -74,6 +77,8 @@ class AccountsViewSet(viewsets.ViewSet):
 
     @action(methods=['POST'], detail=False)
     def login(self, request):
+        jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
+        jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
         # login user and tie identity with user
         app_id = request.POST.get('app_id')
         app_secret = request.POST.get('app_secret')
@@ -96,5 +101,7 @@ class AccountsViewSet(viewsets.ViewSet):
             return Response({'msg': "Name and wechat doesn't match!"}, status=status.HTTP_403_FORBIDDEN)
         """
         user = authenticate(username=user.username, password='20161103')
+        payload = jwt_payload_handler(user)
+        token = jwt_encode_handler(payload)
         login(request, user)
-        return Response({'msg': 'Login!'}, status=status.HTTP_200_OK)
+        return Response({'msg': 'Login!', 'token': token}, status=status.HTTP_200_OK)

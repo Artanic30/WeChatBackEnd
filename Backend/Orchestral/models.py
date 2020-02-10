@@ -18,3 +18,6 @@ class Absence(models.Model):
     type = models.CharField(max_length=300, choices=TYPE_CHOICE, default='A')
     applier = models.ForeignKey(Identity, on_delete=models.CASCADE, related_name='applier')
     processor = models.ForeignKey(Identity, on_delete=models.CASCADE, related_name='processor', null=True, blank=True)
+
+    class Meta:
+        unique_together = ('applier', 'time_absence')

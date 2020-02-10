@@ -13,7 +13,7 @@ from rest_framework.mixins import (
 from django.contrib.auth import authenticate
 from rest_framework.decorators import action
 from .service import Service
-from django.contrib.auth import login, logout
+from django.contrib.auth import login
 import requests
 import json
 
@@ -43,7 +43,6 @@ class ManagerViewSet(viewsets.GenericViewSet,
     permission_classes = [IsAuthenticated, IsAdminUser]
 
     def get_queryset(self):
-        # self.request = Service.fake_login_request(self.request)
         return Absence.objects.all().order_by('time_absence', 'time_apply')
 
     @action(methods=['GET'], detail=True)

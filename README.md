@@ -17,6 +17,26 @@ Registered at `/account/login/`
     "code": "sdasdasdasda"
 }
 ```
+return value
+
+```
+{
+    "msg": "login!",
+    "token": "kjdagsjhdkanbcajgscjdgajhsbcjhagsc"
+}
+```
+to remain login state, add followering to your request header
+```
+header: {
+    'Authorization': 'JWT <str:token>'
+}
+example:
+
+header: {
+    'Authorization': 'JWT lakshdkjagsdjkgaskjdgkjasgdkjakjabsdkjasd'
+}
+
+```
 Ever since the first login, one wechat union id will be bound with a name in the 
 member name list.
 If login fail, the backend will retrun
@@ -35,7 +55,8 @@ Registered at `/absence/`
 ```json
 {
     "reason": "reasons",
-    "time_absence": "2018-01-22T09:12:43.083Z",
+    "time_absence": "2018-01-22",
+    "type": "A" or "S" #  A is 全体排练, S is 声部排练
 }
 ```
 
@@ -47,7 +68,8 @@ Registered at `/absence/<int:absence_id>/`
 ```json
 {
     "reason": "reasons",
-    "time": "2018-01-22T09:12:43.083Z",
+    "time_absence": "2018-01-22",
+    "type": "A" or "S" #  A is 全体排练, S is 声部排练
 }
 ```
 
@@ -76,7 +98,8 @@ Registered at `/absence/`
         "time_absence": "2019-11-10",
         "time_apply": "2019-11-10",
         "result": "Not processed yet!",
-        "permission": false
+        "permission": false,
+        "type": "全体"
     }
 ]
 ```
@@ -84,7 +107,7 @@ Registered at `/absence/`
 
 ### For Managers
 
-any student try access these information will get code 403
+any student try access these information will get code 401
 
 #### All Absence Information 
 Supported method:  `GET`
@@ -101,7 +124,8 @@ Registered at `/manager/`
         "time_absence": "2019-11-10",
         "time_apply": "2019-11-10",
         "result": "Not processed yet!",
-        "permission": false
+        "permission": false,
+        "type": "全体"
     }
 ]
 ```
@@ -114,6 +138,7 @@ id is the pk of absence
 
 ```json
   {
+    "processor": "David"
     "result": "Reason for allowing/not allowing absence",
     "permission": false
   }

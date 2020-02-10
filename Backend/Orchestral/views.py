@@ -44,7 +44,7 @@ class ManagerViewSet(viewsets.GenericViewSet,
 
     def get_queryset(self):
         # self.request = Service.fake_login_request(self.request)
-        return Absence.objects.all().order_by('absence_time', 'time_apply')
+        return Absence.objects.all().order_by('time_absence', 'time_apply')
 
     @action(methods=['GET'], detail=True)
     def present(self, request, pk=None):

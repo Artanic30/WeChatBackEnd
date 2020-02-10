@@ -5,6 +5,10 @@ echo "uwsgi closed"
 echo "start to pull latest code from github"
 git pull origin master
 echo "code pulled!"
+echo "refresh database"
+python3 manage.py makemigrations
+python3 manage.py migrate
+echo "database refreshed"
 echo "start to restart uwsgi"
 uwsgi --ini uwsgi.ini
 echo "uwsgi started!"

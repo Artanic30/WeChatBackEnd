@@ -1,6 +1,8 @@
 # Usage: pull the latest code form github and restart the uwsgi server
 echo "start to close the uwsgi"
 pkill -f uwsgi -9
+echo "activate virtual environment"
+source ../orchestral/bin/activate
 echo "uwsgi closed"
 echo "start to pull latest code from github"
 git pull origin master

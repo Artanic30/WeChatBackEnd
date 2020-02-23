@@ -93,14 +93,14 @@ class ManagerViewSet(viewsets.GenericViewSet,
     @action(methods=['GET'], detail=False)
     def future(self, request):
         time_now = timezone.now().date()
-        result = Absence.objects.filter(~Q(result='Not processed yet!'), time_absence__gt=time_now)
+        result = Absence.objects.filter(result='Not processed yet!', time_absence__gt=time_now)
         serializer = self.serializer_class(result, many=True)
         return Response(serializer.data)
 
     @action(methods=['GET'], detail=False)
     def next(self, request):
         time_now = timezone.now().date()
-        complete_data = Absence.objects.filter(~Q(result='Not processed yet!'), time_absence__gt=time_now)
+        complete_data = Absence.objects.filter(result='Not processed yet!', time_absence__gt=time_now)
         next_time = complete_data[0].time_absence
         result = Absence.objects.filter(time_absence=next_time)
         serializer = self.serializer_class(result, many=True)
@@ -109,7 +109,7 @@ class ManagerViewSet(viewsets.GenericViewSet,
     @action(methods=['GET'], detail=False)
     def history(self, request):
         time_now = timezone.now().date()
-        result = Absence.objects.filter(time_absence__lt=time_now)
+        result = Absence.objects.filter(~Q(result='Not processed yet!'), time_absence__lt=time_now)
         serializer = self.serializer_class(result, many=True)
         return Response(serializer.data)
 

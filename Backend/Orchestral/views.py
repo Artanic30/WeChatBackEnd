@@ -16,6 +16,7 @@ from .service import Service
 from django.contrib.auth import login
 import django.utils.timezone as timezone
 from django.db.models import Q
+from .constants import WIND_NAME_LIST, STRINGED_NAME_LIST, PERCUSSION_NAME_LIST, WIND_UPPER_BOUND, PERCUSSION_UPPER_BOUND, STRINGED_UPPER_BOUND
 import requests
 import json
 
@@ -31,9 +32,26 @@ class AbsenceViewSet(viewsets.GenericViewSet,
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        # self.request = Service.fake_login_request(self.request)
         identity = Identity.objects.get(current_user=self.request.user)
         return Absence.objects.filter(applier=identity)
+
+    def create(self, request, *args, **kwargs):
+        identity = Identity.objects.get(current_user=request.user)
+        upper_bound = 0
+        name = request.user.username
+        for combo_list in [(WIND_NAME_LIST, WIND_UPPER_BOUND),  (STRINGED_NAME_LIST, STRINGED_UPPER_BOUND), (PERCUSSION_NAME_LIST, PERCUSSION_UPPER_BOUND)]:
+            if name in combo_list[0]:
+                upper_bound = combo_list[1]
+        print(upper_bound)
+        if identity.absence_times >= upper_bound:
+            return Response({'msg': 'You have used up all of your chances.'}, status=status.HTTP_403_FORBIDDEN)
+        Service.add_absence_time(identity)
+        return CreateModelMixin.create(self, request, *args, **kwargs)
+
+    def destroy(self, request, *args, **kwargs):
+        identity = Identity.objects.get(current_user=request.user)
+        Service.add_absence_time(identity)
+        return DestroyModelMixin.destroy(self, request, *args, **kwargs)
 
 
 class ManagerViewSet(viewsets.GenericViewSet,
@@ -76,6 +94,15 @@ class ManagerViewSet(viewsets.GenericViewSet,
     def future(self, request):
         time_now = timezone.now().date()
         result = Absence.objects.filter(time_absence__gt=time_now)
+        serializer = self.serializer_class(result, many=True)
+        return Response(serializer.data)
+
+    @action(methods=['GET'], detail=False)
+    def next(self, request):
+        time_now = timezone.now().date()
+        complete_data = Absence.objects.filter(time_absence__gt=time_now)
+        next_time = complete_data[0].time_absence
+        result = Absence.objects.filter(time_absence=next_time)
         serializer = self.serializer_class(result, many=True)
         return Response(serializer.data)
 

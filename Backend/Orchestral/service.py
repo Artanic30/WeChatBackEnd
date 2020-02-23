@@ -5,7 +5,6 @@ from django.contrib.auth.models import User
 from .constants import NAME_LIST
 from django.contrib.auth import authenticate, login
 
-
 class Service:
     @classmethod
     def test_valid(cls, serializer):
@@ -35,7 +34,8 @@ class Service:
             new_identity = IdentitySerializers(data={
                 'name': name,
                 'union_id': wx_union_id,
-                'current_user': name
+                'current_user': name,
+                'absence_times': 0
             })
             cls.test_valid(new_identity)
             authenticate(username=name, password='20161103')
@@ -49,3 +49,11 @@ class Service:
             user = User.objects.create_user(username=name, password='20161103')
             return user
         return None
+
+    @classmethod
+    def add_absence_time(cls, identity):
+        from .serializers import IdentitySerializers
+        updated_identity = IdentitySerializers(identity, data={
+            'absence_times': identity.absence_times + 1
+        }, partial=True)
+        cls.test_valid(updated_identity)

@@ -56,10 +56,16 @@ Registered at `/absence/`
 {
     "reason": "reasons",
     "time_absence": "2018-01-22",
-    "type": "A"
+    "type": "全体排练"
 }
 ```
-type only has two choice : "A" and "S", A is 全体排练, S is 声部排练
+type choices: 全体排练, 弦乐分排, 管乐分排, 弦乐重奏, 管乐重奏
+times reach upper bound
+```json
+{
+    "msg": "You have used up all of your chances."
+}
+```
 
 #### Change Abesence Application 
 Supported method:  `PUT`
@@ -176,6 +182,73 @@ time in YYYY-MM-DD formate example: ('2020-3-12')
 }
 ```
 
+#### Members Absent in Next Rehearsal
+filtered by the closest time anyone applied for absence.
+
+Supported method:  `GET`
+
+Registered at `/manager/next/`
+
+```json
+[
+    {
+        "id": 4,
+        "applier": "David",
+        "processor": null,
+        "reason": "testReason",
+        "time_absence": "2019-11-10",
+        "time_apply": "2019-11-10",
+        "result": "Not processed yet!",
+        "permission": false,
+        "type": "全体"
+    }
+]
+```
+
+#### Members Absent Before the Current Date 
+
+Supported method:  `GET`
+
+Registered at `/manager/history/`
+
+```json
+[
+    {
+        "id": 4,
+        "applier": "David",
+        "processor": null,
+        "reason": "testReason",
+        "time_absence": "2019-11-10",
+        "time_apply": "2019-11-10",
+        "result": "Not processed yet!",
+        "permission": false,
+        "type": "全体"
+    }
+]
+```
+
+#### Members Absent After the Current Date 
+
+Supported method:  `GET`
+
+Registered at `/manager/future/`
+
+```json
+[
+    {
+        "id": 4,
+        "applier": "David",
+        "processor": null,
+        "reason": "testReason",
+        "time_absence": "2019-11-10",
+        "time_apply": "2019-11-10",
+        "result": "Not processed yet!",
+        "permission": false,
+        "type": "全体"
+    }
+]
+```
+
 ## Depoly(Only the part I remember)
 
 # start virtual environment
@@ -187,7 +260,7 @@ pip3 install -r requirements.txt
 
 tips: (sudo pip3 install -r requirements.txt) will install teh library to the system's environment instead of env's
 
-# update database
+# update database(abandoned, merged into script)
 python3 manage.py makemigrations
 python3 manage.py migrate
 

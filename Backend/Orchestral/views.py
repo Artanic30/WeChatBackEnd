@@ -14,6 +14,8 @@ from django.contrib.auth import authenticate
 from rest_framework.decorators import action
 from .service import Service
 from django.contrib.auth import login
+import django.utils.timezone as timezone
+from django.db.models import Q
 import requests
 import json
 
@@ -69,6 +71,20 @@ class ManagerViewSet(viewsets.GenericViewSet,
                     'state': 'present'
                 })
         return Response({'members': result, 'time': pk}, status=status.HTTP_200_OK)
+
+    @action(methods=['GET'], detail=False)
+    def future(self, request):
+        time_now = timezone.now().date()
+        result = Absence.objects.filter(time_absence__gt=time_now)
+        serializer = self.serializer_class(result, many=True)
+        return Response(serializer.data)
+
+    @action(methods=['GET'], detail=False)
+    def history(self, request):
+        time_now = timezone.now().date()
+        result = Absence.objects.filter(~Q(result='Not processed yet!'), time_absence__lt=time_now)
+        serializer = self.serializer_class(result, many=True)
+        return Response(serializer.data)
 
 
 class AccountsViewSet(viewsets.ViewSet):

@@ -51,9 +51,9 @@ class Service:
         return None
 
     @classmethod
-    def add_absence_time(cls, identity):
+    def change_absence_time(cls, identity, times):
         from .serializers import IdentitySerializers
         updated_identity = IdentitySerializers(identity, data={
-            'absence_times': identity.absence_times + 1
+            'absence_times': times
         }, partial=True)
         cls.test_valid(updated_identity)

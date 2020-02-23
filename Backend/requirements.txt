@@ -6,3 +6,4 @@ promise==2.2.1
 pytz==2018.9
 djangorestframework-jwt
 PyJWT
+django-crontab

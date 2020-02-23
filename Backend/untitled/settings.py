@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_crontab',
     'rest_framework',
     'Orchestral'
 ]
@@ -128,3 +129,9 @@ REST_FRAMEWORK = {
 JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=3600)
 }
+
+# time settings
+# https://en.wikipedia.org/wiki/Cron#Format
+CRONJOBS = [
+    ('30 18 23 2 *', 'Orchestral.cron.clean_upper_bound')
+]

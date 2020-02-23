@@ -133,5 +133,5 @@ JWT_AUTH = {
 # time settings
 # https://en.wikipedia.org/wiki/Cron#Format
 CRONJOBS = [
-    ('41 18 23 2 *', 'Orchestral.cron.clean_upper_bound')
+    ('20 21 23 2 *', 'Orchestral.cron.clean_upper_bound')
 ]

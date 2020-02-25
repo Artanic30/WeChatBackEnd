@@ -190,19 +190,48 @@ Supported method:  `GET`
 Registered at `/manager/next/`
 
 ```json
-[
-    {
-        "id": 4,
-        "applier": "David",
-        "processor": null,
-        "reason": "testReason",
-        "time_absence": "2019-11-10",
-        "time_apply": "2019-11-10",
-        "result": "Not processed yet!",
-        "permission": false,
-        "type": "全体"
-    }
-]
+{
+    "time": "2020-03-24",
+    "stringed": [
+        {
+            "id": 23340,
+            "applier": "赵乘风",
+            "processor": null,
+            "reason": "test2",
+            "time_absence": "2020-03-24",
+            "type": "A",
+            "time_apply": "2020-02-08",
+            "result": "Not processed yet!",
+            "permission": false
+        }
+    ]
+    "wind": [
+       {
+            "id": 23340,
+            "applier": "赵乘风",
+            "processor": null,
+            "reason": "test2",
+            "time_absence": "2020-03-24",
+            "type": "A",
+            "time_apply": "2020-02-08",
+            "result": "Not processed yet!",
+            "permission": false
+        }
+    ],
+    "percussion": [
+          {
+            "id": 23340,
+            "applier": "赵乘风",
+            "processor": null,
+            "reason": "test2",
+            "time_absence": "2020-03-24",
+            "type": "A",
+            "time_apply": "2020-02-08",
+            "result": "Not processed yet!",
+            "permission": false
+        }
+    ],
+}
 ```
 
 #### Members Absent Before the Current Date 

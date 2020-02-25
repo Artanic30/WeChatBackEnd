@@ -135,3 +135,11 @@ JWT_AUTH = {
 CRONJOBS = [
     ('20 21 23 2 *', 'Orchestral.cron.clean_upper_bound')
 ]
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.exmail.qq.com'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'qiulongtian@skdgxlq.onexmail.com'
+EMAIL_HOST_PASSWORD = 'Email123321'
+EMAIL_USE_SSL = True
+DEFAULT_FROM_EMAIL = 'qiulongtian@skdgxlq.onexmail.com'

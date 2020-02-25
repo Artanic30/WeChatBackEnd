@@ -4,7 +4,8 @@ from .models import Identity
 from django.contrib.auth.models import User
 from .constants import NAME_LIST
 from django.contrib.auth import authenticate, login
-from .constants import WIND_NAME_LIST, STRINGED_NAME_LIST, PERCUSSION_NAME_LIST, WIND_UPPER_BOUND, STRINGED_UPPER_BOUND, PERCUSSION_UPPER_BOUND
+from .constants import WIND_NAME_LIST, STRINGED_NAME_LIST, PERCUSSION_NAME_LIST, WIND_UPPER_BOUND, STRINGED_UPPER_BOUND, PERCUSSION_UPPER_BOUND, ADMIN_EMAILS
+from django.core.mail import send_mail
 
 
 class Service:
@@ -78,3 +79,12 @@ class Service:
             return WIND_UPPER_BOUND
         return PERCUSSION_UPPER_BOUND
 
+    @classmethod
+    def send_email(cls, name, time, reason):
+        print(name, time, reason)
+        if ADMIN_EMAILS:
+            print(2333)
+            send_mail('有人请假了啊啊啊啊啊',
+                      '{}在{}请假了, 理由是{},请在小程序或服务器处理.'.format(name, time, reason)
+                      , 'qiulongtian@skdgxlq.onexmail.com',
+                      ADMIN_EMAILS, fail_silently=False)

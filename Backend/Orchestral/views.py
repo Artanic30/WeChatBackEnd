@@ -41,6 +41,7 @@ class AbsenceViewSet(viewsets.GenericViewSet,
         if identity.absence_times >= upper_bound:
             return Response({'msg': 'You have used up all of your chances.'}, status=status.HTTP_403_FORBIDDEN)
         Service.change_absence_time(identity, identity.absence_times + 1)
+        Service.send_email(identity.name, timezone.now(), request.POST.get('reason', ''))
         return CreateModelMixin.create(self, request, *args, **kwargs)
 
     def destroy(self, request, *args, **kwargs):

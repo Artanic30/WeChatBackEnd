@@ -17,6 +17,11 @@ STRINGED_NAME_LIST = [
     "李笑风"
 ]
 
+MEMBER_TYPE = [
+    (u'P', u'打击'),
+    (u'S', u'弦乐'),
+    (u'W', u'管乐')
+]
 PERCUSSION_NAME_LIST = [
     'sdada'
 ]

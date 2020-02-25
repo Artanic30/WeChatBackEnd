@@ -4,6 +4,8 @@ from .models import Identity
 from django.contrib.auth.models import User
 from .constants import NAME_LIST
 from django.contrib.auth import authenticate, login
+from .constants import WIND_NAME_LIST, STRINGED_NAME_LIST, PERCUSSION_NAME_LIST, WIND_UPPER_BOUND, STRINGED_UPPER_BOUND, PERCUSSION_UPPER_BOUND
+
 
 class Service:
     @classmethod
@@ -22,6 +24,7 @@ class Service:
         user = None
         if len(Identity.objects.filter(name=name)) != 0:
             user = Identity.objects.get(name=name)
+        mem_type = cls.define_member_type(name)
         if user:
             if user.union_id:
                 pass
@@ -35,7 +38,8 @@ class Service:
                 'name': name,
                 'union_id': wx_union_id,
                 'current_user': name,
-                'absence_times': 0
+                'absence_times': 0,
+                'type': mem_type
             })
             cls.test_valid(new_identity)
             authenticate(username=name, password='20161103')
@@ -57,3 +61,20 @@ class Service:
             'absence_times': times
         }, partial=True)
         cls.test_valid(updated_identity)
+
+    @classmethod
+    def define_member_type(cls, name):
+        mem_type = 'S'
+        for name_list in [WIND_NAME_LIST, STRINGED_NAME_LIST, PERCUSSION_NAME_LIST]:
+            if name in name_list:
+                mem_type = name_list
+        return mem_type
+
+    @classmethod
+    def get_upper_bound(cls, mem_type):
+        if mem_type == 'S':
+            return STRINGED_UPPER_BOUND
+        elif mem_type == 'W':
+            return WIND_UPPER_BOUND
+        return PERCUSSION_UPPER_BOUND
+

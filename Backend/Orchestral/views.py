@@ -37,12 +37,7 @@ class AbsenceViewSet(viewsets.GenericViewSet,
 
     def create(self, request, *args, **kwargs):
         identity = Identity.objects.get(current_user=request.user)
-        upper_bound = 0
-        name = request.user.username
-        for combo_list in [(WIND_NAME_LIST, WIND_UPPER_BOUND),  (STRINGED_NAME_LIST, STRINGED_UPPER_BOUND), (PERCUSSION_NAME_LIST, PERCUSSION_UPPER_BOUND)]:
-            if name in combo_list[0]:
-                upper_bound = combo_list[1]
-        print(upper_bound)
+        upper_bound = Service.get_upper_bound(identity.type)
         if identity.absence_times >= upper_bound:
             return Response({'msg': 'You have used up all of your chances.'}, status=status.HTTP_403_FORBIDDEN)
         Service.change_absence_time(identity, identity.absence_times + 1)
@@ -105,8 +100,25 @@ class ManagerViewSet(viewsets.GenericViewSet,
             return Response([])
         next_time = complete_data[0].time_absence
         result = Absence.objects.filter(time_absence=next_time)
-        serializer = self.serializer_class(result, many=True)
-        return Response(serializer.data)
+        w_serializer = []
+        s_serializer = []
+        p_serializer = []
+        for absence in result:
+            if absence.applier.type == 'S':
+                s_serializer.append(absence)
+            elif absence.applier.type == 'W':
+                w_serializer.append(absence)
+            else:
+                p_serializer.append(absence)
+        w_serializer = self.serializer_class(w_serializer, many=True)
+        s_serializer = self.serializer_class(s_serializer, many=True)
+        p_serializer = self.serializer_class(p_serializer, many=True)
+        return Response({
+            'time': next_time,
+            'stringed': s_serializer.data,
+            'wind': w_serializer.data,
+            'percussion': p_serializer.data
+        })
 
     @action(methods=['GET'], detail=False)
     def history(self, request):

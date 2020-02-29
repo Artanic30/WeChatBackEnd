@@ -103,7 +103,7 @@ class ManagerViewSet(viewsets.GenericViewSet,
     @action(methods=['GET'], detail=False)
     def next(self, request):
         time_now = timezone.now().date()
-        complete_data = Absence.objects.filter(result='Not processed yet!', time_absence__gt=time_now)
+        complete_data = Absence.objects.filter(time_absence__gt=time_now)
         if len(complete_data) == 0:
             return Response([])
         next_time = complete_data[0].time_absence

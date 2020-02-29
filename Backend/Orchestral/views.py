@@ -40,7 +40,8 @@ class AbsenceViewSet(viewsets.GenericViewSet,
         upper_bound = Service.get_upper_bound(identity.type)
         decrease_time = 1
         absence_time = identity.absence_times
-        if request.POST.get('type', '') == '全体排练+弦乐分排' or request.Post.get('type', '') == '全体排练+管乐分排':
+        absence_type = request.POST.get('type', '')
+        if absence_type == '全体排练+弦乐分排' or absence_type == '全体排练+管乐分排':
             absence_time += 1
             decrease_time += 1
         if absence_time >= upper_bound:

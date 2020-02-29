@@ -59,7 +59,7 @@ Registered at `/absence/`
     "type": "全体排练"
 }
 ```
-type choices: 全体排练, 弦乐分排, 管乐分排, 弦乐重奏, 管乐重奏
+type choices: 全体排练, 弦乐分排, 管乐分排, 弦乐重奏, 管乐重奏, 全体排练+弦乐分排, 全体排练+管乐分排
 times reach upper bound
 ```json
 {
@@ -79,7 +79,7 @@ Registered at `/absence/<int:absence_id>/`
     "type": "A"
 }
 ```
-type only has two choice : "A" and "S", A is 全体排练, S is 声部排练
+type choices: 全体排练, 弦乐分排, 管乐分排, 弦乐重奏, 管乐重奏, 全体排练+弦乐分排, 全体排练+管乐分排
 
 #### Delete Abesence Application 
 Supported method:  `DELETE`
@@ -199,7 +199,7 @@ Registered at `/manager/next/`
             "processor": null,
             "reason": "test2",
             "time_absence": "2020-03-24",
-            "type": "A",
+            "type": "全体排练",
             "time_apply": "2020-02-08",
             "result": "Not processed yet!",
             "permission": false
@@ -212,7 +212,7 @@ Registered at `/manager/next/`
             "processor": null,
             "reason": "test2",
             "time_absence": "2020-03-24",
-            "type": "A",
+            "type": "全体排练",
             "time_apply": "2020-02-08",
             "result": "Not processed yet!",
             "permission": false
@@ -225,7 +225,7 @@ Registered at `/manager/next/`
             "processor": null,
             "reason": "test2",
             "time_absence": "2020-03-24",
-            "type": "A",
+            "type": "全体排练",
             "time_apply": "2020-02-08",
             "result": "Not processed yet!",
             "permission": false

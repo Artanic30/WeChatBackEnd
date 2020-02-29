@@ -38,9 +38,15 @@ class AbsenceViewSet(viewsets.GenericViewSet,
     def create(self, request, *args, **kwargs):
         identity = Identity.objects.get(current_user=request.user)
         upper_bound = Service.get_upper_bound(identity.type)
-        if identity.absence_times >= upper_bound:
+        decrease_time = 1
+        absence_time = identity.absence_times
+        if request.POST.get('type', '') == '全体排练+弦乐分排' or request.Post.get('type', '') == '全体排练+管乐分排':
+            absence_time += 1
+            decrease_time += 1
+        if absence_time >= upper_bound:
             return Response({'msg': 'You have used up all of your chances.'}, status=status.HTTP_403_FORBIDDEN)
-        Service.change_absence_time(identity, identity.absence_times + 1)
+        print(decrease_time, absence_time, 23333333)
+        Service.change_absence_time(identity, identity.absence_times + decrease_time)
         Service.send_email(identity.name, timezone.now(), request.POST.get('reason', ''))
         return CreateModelMixin.create(self, request, *args, **kwargs)
 

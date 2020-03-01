@@ -37,6 +37,8 @@ class AbsenceViewSet(viewsets.GenericViewSet,
 
     def create(self, request, *args, **kwargs):
         identity = Identity.objects.get(current_user=request.user)
+        if Absence.objects.filter(applier=identity, time_absence=request.POST.get('time_absence', '')) != 0:
+            return Response({'msg': 'Duplicated absence'}, status=status.HTTP_400_BAD_REQUEST)
         upper_bound = Service.get_upper_bound(identity.type)
         decrease_time = 1
         absence_time = identity.absence_times

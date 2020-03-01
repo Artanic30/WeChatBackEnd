@@ -33,7 +33,7 @@ class AbsenceViewSet(viewsets.GenericViewSet,
 
     def get_queryset(self):
         identity = Identity.objects.get(current_user=self.request.user)
-        return Absence.objects.filter(applier=identity)
+        return Absence.objects.filter(applier=identity).order_by('time_absence')
 
     def create(self, request, *args, **kwargs):
         identity = Identity.objects.get(current_user=request.user)

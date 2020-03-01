@@ -103,11 +103,11 @@ class ManagerViewSet(viewsets.GenericViewSet,
     @action(methods=['GET'], detail=False)
     def next(self, request):
         time_now = timezone.now().date()
-        complete_data = Absence.objects.filter(time_absence__gt=time_now)
+        complete_data = Absence.objects.filter(time_absence__gt=time_now).order_by('time_absence')
         if len(complete_data) == 0:
             return Response([])
         next_time = complete_data[0].time_absence
-        result = Absence.objects.filter(time_absence=next_time).order_by('time_absence')
+        result = Absence.objects.filter(time_absence=next_time)
         w_serializer = []
         s_serializer = []
         p_serializer = []

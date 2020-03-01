@@ -22,15 +22,15 @@ class Service:
         if name not in NAME_LIST:
             return False
         # if name and union_id match return True otherwise return False
-        user = None
+        identity = None
         if len(Identity.objects.filter(name=name)) != 0:
             user = Identity.objects.get(name=name)
         mem_type = cls.define_member_type(name)
-        if user:
-            if user.union_id:
+        if identity:
+            if identity.union_id:
                 pass
             else:
-                complete_identity = IdentitySerializers(user, data={
+                complete_identity = IdentitySerializers(identity, data={
                         'union_id': wx_union_id,
                     }, partial=True)
                 cls.test_valid(complete_identity)
@@ -66,9 +66,9 @@ class Service:
     @classmethod
     def define_member_type(cls, name):
         mem_type = 'S'
-        for name_list in [WIND_NAME_LIST, STRINGED_NAME_LIST, PERCUSSION_NAME_LIST]:
+        for key, name_list in {'W': WIND_NAME_LIST, 'S': STRINGED_NAME_LIST, 'P': PERCUSSION_NAME_LIST}.items():
             if name in name_list:
-                mem_type = name_list
+                mem_type = key
         return mem_type
 
     @classmethod

@@ -164,6 +164,7 @@ class AccountsViewSet(viewsets.ViewSet):
             logout(request)
             return Response({'msg': "Name and wechat doesn't match!"}, status=status.HTTP_403_FORBIDDEN)
         """
+        Service.match_user_identity(name=name, wx_union_id='placeholder')
         user = authenticate(username=user.username, password='20161103')
         payload = jwt_payload_handler(user)
         token = jwt_encode_handler(payload)

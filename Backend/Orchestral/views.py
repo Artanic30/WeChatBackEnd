@@ -66,7 +66,7 @@ class ManagerViewSet(viewsets.GenericViewSet,
     permission_classes = [IsAuthenticated, IsAdminUser]
 
     def get_queryset(self):
-        return Absence.objects.all().order_by('time_absence', 'time_apply')
+        return Absence.objects.all().order_by('time_absence')
 
     @action(methods=['GET'], detail=True)
     def present(self, request, pk=None):

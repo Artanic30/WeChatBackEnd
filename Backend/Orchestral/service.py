@@ -24,7 +24,7 @@ class Service:
         # if name and union_id match return True otherwise return False
         identity = None
         if len(Identity.objects.filter(name=name)) != 0:
-            user = Identity.objects.get(name=name)
+            identity = Identity.objects.get(name=name)
         mem_type = cls.define_member_type(name)
         if identity:
             if identity.union_id:

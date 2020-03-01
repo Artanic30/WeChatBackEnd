@@ -59,6 +59,12 @@ Registered at `/absence/`
     "type": "全体排练"
 }
 ```
+error response
+```json
+{
+    "msg": "error reasons"
+}
+```
 type choices: 全体排练, 弦乐分排, 管乐分排, 弦乐重奏, 管乐重奏, 全体排练+弦乐分排, 全体排练+管乐分排
 times reach upper bound
 ```json

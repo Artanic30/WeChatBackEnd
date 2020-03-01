@@ -37,7 +37,7 @@ class AbsenceViewSet(viewsets.GenericViewSet,
 
     def create(self, request, *args, **kwargs):
         identity = Identity.objects.get(current_user=request.user)
-        if Absence.objects.filter(applier=identity, time_absence=request.POST.get('time_absence', '')) != 0:
+        if len(Absence.objects.filter(applier=identity, time_absence=request.POST.get('time_absence', '20161103'))) != 0:
             return Response({'msg': 'Duplicated absence'}, status=status.HTTP_400_BAD_REQUEST)
         upper_bound = Service.get_upper_bound(identity.type)
         decrease_time = 1
@@ -48,7 +48,6 @@ class AbsenceViewSet(viewsets.GenericViewSet,
             decrease_time += 1
         if absence_time >= upper_bound:
             return Response({'msg': 'You have used up all of your chances.'}, status=status.HTTP_403_FORBIDDEN)
-        print(decrease_time, absence_time, 23333333)
         Service.change_absence_time(identity, identity.absence_times + decrease_time)
         Service.send_email(identity.name, timezone.now(), request.POST.get('reason', ''))
         return CreateModelMixin.create(self, request, *args, **kwargs)

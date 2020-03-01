@@ -107,7 +107,7 @@ class ManagerViewSet(viewsets.GenericViewSet,
         if len(complete_data) == 0:
             return Response([])
         next_time = complete_data[0].time_absence
-        result = Absence.objects.filter(time_absence=next_time)
+        result = Absence.objects.filter(time_absence=next_time).order_by('time_absence')
         w_serializer = []
         s_serializer = []
         p_serializer = []

@@ -1,5 +1,5 @@
 requests
-Django==2.1.7
+Django==2.2.13
 Pillow==5.4.1
 djangorestframework==3.9.1
 promise==2.2.1

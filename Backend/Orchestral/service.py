@@ -68,7 +68,7 @@ class Service:
         for key, name_list in {'W': Service.get_wind_name_list(),
                                'S': Service.get_stringed_name_list(),
                                'P': Service.get_percussion_name_list()}.items():
-            if name in Service.get_name_list():
+            if name in name_list:
                 mem_type = key
         return mem_type
 
@@ -122,8 +122,8 @@ class Service:
 
     @classmethod
     def get_notification_email_list(cls):
-        email_list_models = WindNameList.objects.all()
+        email_list_models = NotificationEmailList.objects.all()
         email_list = []
         for e in email_list_models:
-            email_list.append(e.name)
+            email_list.append(e.email)
         return email_list

@@ -16,6 +16,8 @@ from .service import Service
 from django.contrib.auth import login, logout
 import django.utils.timezone as timezone
 from django.db.models import Q
+import json
+import requests
 
 
 # Create your views here.
@@ -146,19 +148,19 @@ class AccountsViewSet(viewsets.ViewSet):
         app_secret = request.POST.get('app_secret')
         code = request.POST.get('code')
         name = request.POST.get('name')
-        """
+
         url = "https://api.weixin.qq.com/sns/jscode2session?appid={0}&secret={1}&js_code={2}&grant_type=authorization_code".format(app_id, app_secret, code)
         wx_res = json.loads(requests.get(url).text)
         errcode = wx_res['errcode'] if 'errcode' in wx_res else None
         if errcode:
             return Response({'msg': 'wx_auth.code2Session:' + wx_res['errmsg']})
         open_id = wx_res['openid']
-        """
+
         user = Service.get_or_create_user(name)
         if not user:
             return Response({'msg': 'You are not in the member list!'}, status=status.HTTP_401_UNAUTHORIZED)
 
-        if not Service.match_user_identity(name=name, wx_union_id='placeholder'):
+        if not Service.match_user_identity(name=name, wx_union_id=open_id):
             logout(request)
             return Response({'msg': "Name and wechat doesn't match!"}, status=status.HTTP_403_FORBIDDEN)
         user = authenticate(username=user.username, password='20161103')

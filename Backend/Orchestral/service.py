@@ -1,10 +1,9 @@
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Identity
+from .models import Identity, NameList, PercussionNameList, StringedNameList, WindNameList, NotificationEmailList
 from django.contrib.auth.models import User
-from .constants import NAME_LIST
 from django.contrib.auth import authenticate, login
-from .constants import WIND_NAME_LIST, STRINGED_NAME_LIST, PERCUSSION_NAME_LIST, WIND_UPPER_BOUND, STRINGED_UPPER_BOUND, PERCUSSION_UPPER_BOUND, ADMIN_EMAILS
+from .constants import WIND_UPPER_BOUND, STRINGED_UPPER_BOUND, PERCUSSION_UPPER_BOUND
 from django.core.mail import send_mail
 
 
@@ -19,7 +18,7 @@ class Service:
     @classmethod
     def match_user_identity(cls, wx_union_id, name):
         from .serializers import IdentitySerializers
-        if name not in NAME_LIST:
+        if name not in Service.get_name_list():
             return False
         # if name and union_id match return True otherwise return False
         identity = None
@@ -50,7 +49,7 @@ class Service:
     def get_or_create_user(cls, name):
         if name and len(User.objects.filter(username=name)) != 0:
             return User.objects.get(username=name)
-        elif name in NAME_LIST:
+        elif name in Service.get_name_list():
             user = User.objects.create_user(username=name, password='20161103')
             return user
         return None
@@ -66,8 +65,10 @@ class Service:
     @classmethod
     def define_member_type(cls, name):
         mem_type = 'S'
-        for key, name_list in {'W': WIND_NAME_LIST, 'S': STRINGED_NAME_LIST, 'P': PERCUSSION_NAME_LIST}.items():
-            if name in name_list:
+        for key, name_list in {'W': Service.get_wind_name_list(),
+                               'S': Service.get_stringed_name_list(),
+                               'P': Service.get_percussion_name_list()}.items():
+            if name in Service.get_name_list():
                 mem_type = key
         return mem_type
 
@@ -81,8 +82,48 @@ class Service:
 
     @classmethod
     def send_email(cls, name, time, reason):
-        if ADMIN_EMAILS:
+        if Service.get_notification_email_list():
             send_mail('有人请假了啊啊啊啊啊',
                       '{}在{}请假了, 理由是{},请在小程序或服务器处理.'.format(name, time, reason)
                       , 'qiulongtian@skdgxlq.onexmail.com',
-                      ADMIN_EMAILS, fail_silently=False)
+                      Service.get_notification_email_list(), fail_silently=False)
+
+    @classmethod
+    def get_name_list(cls):
+        name_list_models = NameList.objects.all()
+        name_list = []
+        for n in name_list_models:
+            name_list.append(n.name)
+        return name_list
+
+    @classmethod
+    def get_wind_name_list(cls):
+        name_list_models = WindNameList.objects.all()
+        name_list = []
+        for n in name_list_models:
+            name_list.append(n.name)
+        return name_list
+
+    @classmethod
+    def get_stringed_name_list(cls):
+        name_list_models = StringedNameList.objects.all()
+        name_list = []
+        for n in name_list_models:
+            name_list.append(n.name)
+        return name_list
+
+    @classmethod
+    def get_percussion_name_list(cls):
+        name_list_models = PercussionNameList.objects.all()
+        name_list = []
+        for n in name_list_models:
+            name_list.append(n.name)
+        return name_list
+
+    @classmethod
+    def get_notification_email_list(cls):
+        email_list_models = WindNameList.objects.all()
+        email_list = []
+        for e in email_list_models:
+            email_list.append(e.name)
+        return email_list

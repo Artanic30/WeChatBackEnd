@@ -23,3 +23,23 @@ class Absence(models.Model):
 
     class Meta:
         unique_together = ('applier', 'time_absence')
+
+
+class NameList(models.Model):
+    name = models.CharField(max_length=20)
+
+
+class WindNameList(models.Model):
+    name = models.CharField(max_length=20)
+
+
+class StringedNameList(models.Model):
+    name = models.CharField(max_length=20)
+
+
+class PercussionNameList(models.Model):
+    name = models.CharField(max_length=20)
+
+
+class NotificationEmailList(models.Model):
+    email = models.EmailField(max_length=50)

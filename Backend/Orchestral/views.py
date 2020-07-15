@@ -13,12 +13,9 @@ from rest_framework.mixins import (
 from django.contrib.auth import authenticate
 from rest_framework.decorators import action
 from .service import Service
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 import django.utils.timezone as timezone
 from django.db.models import Q
-from .constants import WIND_NAME_LIST, STRINGED_NAME_LIST, PERCUSSION_NAME_LIST, WIND_UPPER_BOUND, PERCUSSION_UPPER_BOUND, STRINGED_UPPER_BOUND
-import requests
-import json
 
 
 # Create your views here.
@@ -160,12 +157,10 @@ class AccountsViewSet(viewsets.ViewSet):
         user = Service.get_or_create_user(name)
         if not user:
             return Response({'msg': 'You are not in the member list!'}, status=status.HTTP_401_UNAUTHORIZED)
-        """
-        if not Service.match_user_identity(name=name, wx_union_id=open_id):
+
+        if not Service.match_user_identity(name=name, wx_union_id='placeholder'):
             logout(request)
             return Response({'msg': "Name and wechat doesn't match!"}, status=status.HTTP_403_FORBIDDEN)
-        """
-        Service.match_user_identity(name=name, wx_union_id='placeholder')
         user = authenticate(username=user.username, password='20161103')
         payload = jwt_payload_handler(user)
         token = jwt_encode_handler(payload)

@@ -153,7 +153,7 @@ class AccountsViewSet(viewsets.ViewSet):
         wx_res = json.loads(requests.get(url).text)
         errcode = wx_res['errcode'] if 'errcode' in wx_res else None
         if errcode:
-            return Response({'msg': 'wx_auth.code2Session:' + wx_res['errmsg']}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'msg': 'wx server request failed'}, status=status.HTTP_400_BAD_REQUEST)
         open_id = wx_res['openid']
 
         user = Service.get_or_create_user(name)

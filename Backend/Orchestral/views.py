@@ -153,7 +153,7 @@ class AccountsViewSet(viewsets.ViewSet):
         wx_res = json.loads(requests.get(url).text)
         errcode = wx_res['errcode'] if 'errcode' in wx_res else None
         if errcode:
-            return Response({'msg': 'wx_auth.code2Session:' + wx_res['errmsg']})
+            return Response({'msg': 'wx_auth.code2Session:' + wx_res['errmsg']}, status=status.HTTP_400_BAD_REQUEST)
         open_id = wx_res['openid']
 
         user = Service.get_or_create_user(name)
@@ -162,7 +162,7 @@ class AccountsViewSet(viewsets.ViewSet):
 
         if not Service.match_user_identity(name=name, wx_union_id=open_id):
             logout(request)
-            return Response({'msg': "Name and wechat doesn't match!"}, status=status.HTTP_403_FORBIDDEN)
+            return Response({'msg': "Name and wechat id doesn't match!"}, status=status.HTTP_403_FORBIDDEN)
         user = authenticate(username=user.username, password='20161103')
         payload = jwt_payload_handler(user)
         token = jwt_encode_handler(payload)

@@ -22,18 +22,16 @@ class Service:
             return False
         # if name and union_id match return True otherwise return False
         identity = None
-        if len(Identity.objects.filter(name=name)) != 0:
-            identity = Identity.objects.get(name=name)
-        mem_type = cls.define_member_type(name)
+        if len(Identity.objects.filter(name=name, union_id=wx_union_id)) != 0:
+            identity = Identity.objects.get(name=name, union_id=wx_union_id)
         if identity:
-            if identity.union_id:
-                pass
-            else:
+            if not identity.union_id:
                 complete_identity = IdentitySerializers(identity, data={
                         'union_id': wx_union_id,
                     }, partial=True)
                 cls.test_valid(complete_identity)
         else:
+            mem_type = cls.define_member_type(name)
             new_identity = IdentitySerializers(data={
                 'name': name,
                 'union_id': wx_union_id,

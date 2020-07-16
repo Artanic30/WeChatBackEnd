@@ -22,8 +22,11 @@ class Service:
             return False
         # if name and union_id match return True otherwise return False
         identity = None
-        if len(Identity.objects.filter(name=name, union_id=wx_union_id)) != 0:
-            identity = Identity.objects.get(name=name, union_id=wx_union_id)
+        if len(Identity.objects.filter(name=name)) != 0:
+            identity = Identity.objects.get(name=name)
+            if identity.union_id != wx_union_id:
+                return False
+
         if identity:
             if not identity.union_id:
                 complete_identity = IdentitySerializers(identity, data={

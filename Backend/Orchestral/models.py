@@ -5,7 +5,7 @@ from .constants import TYPE_CHOICE, MEMBER_TYPE
 
 class Identity(models.Model):
     name = models.CharField(max_length=20, unique=True)
-    union_id = models.CharField(max_length=100, null=True, blank=True)
+    union_id = models.CharField(max_length=100, null=True, blank=True, unique=True)
     current_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='current_user', null=True)
     absence_times = models.IntegerField(default=0)
     type = models.CharField(max_length=300, choices=MEMBER_TYPE, default='S')

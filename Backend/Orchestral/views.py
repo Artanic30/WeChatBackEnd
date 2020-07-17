@@ -71,9 +71,11 @@ class ManagerViewSet(viewsets.GenericViewSet,
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
-        data = request.data
-        data['processor'] = request.user
-        serializer = self.get_serializer(instance, data=data, partial=partial)
+        serializer = self.get_serializer(instance, data={
+            'result': request.POST.get('result', ''),
+            'permission': request.POST.get('permission', ''),
+            'processor': request.user
+        }, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
 

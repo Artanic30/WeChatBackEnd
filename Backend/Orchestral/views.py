@@ -66,7 +66,30 @@ class ManagerViewSet(viewsets.GenericViewSet,
     permission_classes = [IsAuthenticated, IsAdminUser]
 
     def get_queryset(self):
-        return Absence.objects.all().order_by('time_absence')
+        return Absence.objects.all().order_by('time_request.userabsence')
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        data = request.data
+        data['processor'] = request.user
+        serializer = self.get_serializer(instance, data=data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            # If 'prefetch_related' has been applied to a queryset, we need to
+            # forcibly invalidate the prefetch cache on the instance.
+            instance._prefetched_objects_cache = {}
+
+        return Response(serializer.data)
+
+    def perform_update(self, serializer):
+        serializer.save()
+
+    def partial_update(self, request, *args, **kwargs):
+        kwargs['partial'] = True
+        return self.update(request, *args, **kwargs)
 
     @action(methods=['GET'], detail=True)
     def present(self, request, pk=None):

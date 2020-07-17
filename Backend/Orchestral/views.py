@@ -66,7 +66,7 @@ class ManagerViewSet(viewsets.GenericViewSet,
     permission_classes = [IsAuthenticated, IsAdminUser]
 
     def get_queryset(self):
-        return Absence.objects.all().order_by('time_request.userabsence')
+        return Absence.objects.all().order_by('time_absence')
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)

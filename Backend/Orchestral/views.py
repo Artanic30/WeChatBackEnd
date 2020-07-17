@@ -151,6 +151,7 @@ class AccountsViewSet(viewsets.ViewSet):
 
         url = "https://api.weixin.qq.com/sns/jscode2session?appid={0}&secret={1}&js_code={2}&grant_type=authorization_code".format(app_id, app_secret, code)
         wx_res = json.loads(requests.get(url).text)
+        print(wx_res)
         errcode = wx_res['errcode'] if 'errcode' in wx_res else None
         if errcode:
             return Response({'msg': 'wx server request failed'}, status=status.HTTP_400_BAD_REQUEST)

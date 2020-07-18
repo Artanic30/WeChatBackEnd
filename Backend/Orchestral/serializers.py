@@ -35,9 +35,14 @@ class AbsenceSerializers(serializers.ModelSerializer):
         if not user.is_authenticated:
             raise serializers.ValidationError('You need to login first')
         delta = time_absence - timezone.now().date()
-        if delta.total_seconds() <= 3600:
-            raise serializers.ValidationError('Time is less than one hour')
+
         identity = Identity.objects.get(current_user=user)
+        if delta.total_seconds() <= 3600:
+            # before call create function, absence time is added to current identity,
+            # however, error is caught later here so we need to deduct absence time here.
+            Service.change_absence_time(identity, identity.absence_times - 1)
+            raise serializers.ValidationError('Time is less than one hour')
+
         validated_data['applier'] = identity
         absence = Absence.objects.create(**validated_data)
         return absence
